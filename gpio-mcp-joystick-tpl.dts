@@ -1,0 +1,98 @@
+/*
+ * Device Tree Source for arcade controllers connected via I2C on GPIO
+ * with a port expander MCP23017.
+ * Supports up to eight controllers with max 16 buttons each.
+ *
+ * Copyright (c) 2024 Gemba @ GitHub
+ * SPDX-License-Identifier: GPL-2.0-only
+ */
+
+#include <dt-bindings/input/linux-event-codes.h>
+#include <dt-bindings/gpio/gpio.h>
+
+#include "mcp-port-map.h"
+
+/dts-v1/;
+/plugin/;
+
+/ {
+
+    fragment@50 {
+        target = <&mcp23017>;
+        __overlay__ {
+            pin_cfg: pin_cfg {
+                pins = "gpio0";
+                bias-pull-up;
+            };
+        };
+    };
+
+    fragment@51 {
+        target-path = "/";
+        __dormant__ {
+            gpio-mcp-joy1 {
+                compatible = "gpio-keys";
+                label = "I2C Arcade Joystick 1";
+                status = "okay";
+                pinctrl-0 = <&pin_cfg>;
+                pinctrl-names = "default";
+                /* will be replaced with define from include/mcp-port-map.h */
+                ARCADE_DT_MCP_PORT_MAP
+            };
+        };
+    };
+
+    fragment@52 {
+        target-path = "/";
+        __dormant__ {
+            gpio-mcp-joy2 {
+                compatible = "gpio-keys";
+                label = "I2C Arcade Joystick 2";
+                status = "okay";
+                pinctrl-0 = <&pin_cfg>;
+                pinctrl-names = "default";
+
+                ARCADE_DT_MCP_PORT_MAP
+            };
+        };
+    };
+
+    fragment@53 {
+        target-path = "/";
+        __dormant__ {
+            gpio-mcp-joy3 {
+                compatible = "gpio-keys";
+                label = "I2C Arcade Joystick 3";
+                status = "okay";
+                pinctrl-0 = <&pin_cfg>;
+                pinctrl-names = "default";
+
+                ARCADE_DT_MCP_PORT_MAP
+            };
+        };
+    };
+
+    fragment@54 {
+        target-path = "/";
+        __dormant__ {
+            gpio-mcp-joy4 {
+                compatible = "gpio-keys";
+                label = "I2C Arcade Joystick 4";
+                status = "okay";
+                pinctrl-0 = <&pin_cfg>;
+                pinctrl-names = "default";
+
+                ARCADE_DT_MCP_PORT_MAP
+            };
+        };
+
+    };
+    /* create fragment@55 to fragment@58 if needed for joysticks 5 to 8 */
+
+    __overrides__ {
+        joy1 = <0>,"+51";
+        joy2 = <0>,"+52";
+        joy3 = <0>,"+53";
+        joy4 = <0>,"+54";
+    };
+};

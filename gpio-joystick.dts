@@ -1,0 +1,311 @@
+/*
+ * Device Tree Source for GPIO connected arcade controllers.
+ * Supports up to two controllers with max 13 buttons each.
+ *
+ * Copyright (c) 2024 Gemba @ GitHub
+ * SPDX-License-Identifier: GPL-2.0-only
+ */
+
+#include <dt-bindings/input/linux-event-codes.h>
+#include <dt-bindings/gpio/gpio.h>
+
+/dts-v1/;
+/plugin/;
+
+/ {
+    compatible = "brcm,bcm2835", "brcm,bcm2712", "brcm,bcm2711", "brcm,bcm2710", "brcm,bcm2709", "brcm,bcm2708";
+
+    fragment@1 {
+        target = <&gpio>;
+        __dormant__ {
+            button_pins1: button_pins1 {
+                /* joy1:     up dn le ri st sl tl  x  y tr  a  b */
+                brcm,pins = < 4 17 27 22 10  9 14 15 18 23 24 25>; /* GPIO port numbers */
+                brcm,function = <0>; /* all input */
+                brcm,pull = <2>; /* all pull up */
+            };
+        };
+    };
+
+    fragment@2 {
+        target = <&gpio>;
+        __dormant__ {
+            button_pins2: button_pins2 {
+                /* joy2:     up dn le ri st sl tl  x  y tr  a  b */
+                brcm,pins = <11  5  6 13 19 26  8  7 12 16 20 21>;
+                brcm,function = <0>;
+                brcm,pull = <2>;
+            };
+        };
+    };
+
+    fragment@3 {
+        target-path = "/";
+        __dormant__ {
+            gpio-joy1 {
+                compatible = "gpio-keys";
+                label = "GPIO Arcade Joystick 1";
+                status = "okay";
+                pinctrl-names = "default";
+                pinctrl-0 = <&button_pins1>;
+                /* cf. https://github.com/torvalds/linux/blob/master/include/uapi/linux/input-event-codes.h */
+                up1: up {
+                    linux,code = <BTN_DPAD_UP>;
+                    gpios = <&gpio 4 GPIO_ACTIVE_LOW>;
+                    label = "BTN_DPAD_UP";
+                };
+                down1: down {
+                    linux,code = <BTN_DPAD_DOWN>;
+                    gpios = <&gpio 17 GPIO_ACTIVE_LOW>;
+                    label = "BTN_DPAD_DOWN";
+                };
+                left1: left {
+                    linux,code = <BTN_DPAD_LEFT>;
+                    gpios = <&gpio 27 GPIO_ACTIVE_LOW>;
+                    label = "BTN_DPAD_LEFT";
+                };
+                right1: right {
+                    linux,code = <BTN_DPAD_RIGHT>;
+                    gpios = <&gpio 22 GPIO_ACTIVE_LOW>;
+                    label = "BTN_DPAD_RIGHT";
+                };
+                start1: start {
+                    linux,code = <BTN_START>;
+                    gpios = <&gpio 10 GPIO_ACTIVE_LOW>;
+                    label = "BTN_START";
+                };
+                select1: select {
+                    linux,code = <BTN_SELECT>;
+                    gpios = <&gpio 9 GPIO_ACTIVE_LOW>;
+                    label = "BTN_SELECT";
+                };
+                tl1: tl {
+                    linux,code = <BTN_TL>;
+                    gpios = <&gpio 14 GPIO_ACTIVE_LOW>;
+                    label = "BTN_TL";
+                };
+                x1: x {
+                    linux,code = <BTN_X>; /* BTN_NORTH */
+                    gpios = <&gpio 15 GPIO_ACTIVE_LOW>;
+                    label = "BTN_X";
+                };
+                y1: y {
+                    linux,code = <BTN_Y>; /* BTN_WEST */
+                    gpios = <&gpio 18 GPIO_ACTIVE_LOW>;
+                    label = "BTN_Y";
+                };
+                tr1: tr {
+                    linux,code = <BTN_TR>;
+                    gpios = <&gpio 23 GPIO_ACTIVE_LOW>;
+                    label = "BTN_TR";
+                };
+                a1: a {
+                    linux,code = <BTN_A>; /* BTN_SOUTH */
+                    gpios = <&gpio 24 GPIO_ACTIVE_LOW>;
+                    label = "BTN_A";
+                };
+                b1: b {
+                    linux,code = <BTN_B>; /* BTN_EAST */
+                    gpios = <&gpio 25 GPIO_ACTIVE_LOW>;
+                    label = "BTN_B";
+                };
+            };
+        };
+    };
+
+    fragment@4 {
+        target-path = "/";
+        __dormant__ {
+            gpio-joy2 {
+                compatible = "gpio-keys";
+                label = "GPIO Arcade Joystick 2";
+                status = "okay";
+                pinctrl-names = "default";
+                pinctrl-0 = <&button_pins2>;
+                up2: up {
+                    linux,code = <BTN_DPAD_UP>;
+                    gpios = <&gpio 11 GPIO_ACTIVE_LOW>;
+                    label = "BTN_DPAD_UP";
+                };
+                down2: down {
+                    linux,code = <BTN_DPAD_DOWN>;
+                    gpios = <&gpio 5 GPIO_ACTIVE_LOW>;
+                    label = "BTN_DPAD_DOWN";
+                };
+                left2: left {
+                    linux,code = <BTN_DPAD_LEFT>;
+                    gpios = <&gpio 6 GPIO_ACTIVE_LOW>;
+                    label = "BTN_DPAD_LEFT";
+                };
+                right2: right {
+                    linux,code = <BTN_DPAD_RIGHT>;
+                    gpios = <&gpio 13 GPIO_ACTIVE_LOW>;
+                    label = "BTN_DPAD_RIGHT";
+                };
+                start2: start {
+                    linux,code = <BTN_START>;
+                    gpios = <&gpio 19 GPIO_ACTIVE_LOW>;
+                    label = "BTN_START";
+                };
+                select2: select {
+                    linux,code = <BTN_SELECT>;
+                    gpios = <&gpio 26 GPIO_ACTIVE_LOW>;
+                    label = "BTN_SELECT";
+                };
+                tl2: tl {
+                    linux,code = <BTN_TL>;
+                    gpios = <&gpio 8 GPIO_ACTIVE_LOW>;
+                    label = "BTN_TL";
+                };
+                x2: x {
+                    linux,code = <BTN_X>; /* BTN_NORTH */
+                    gpios = <&gpio 7 GPIO_ACTIVE_LOW>;
+                    label = "BTN_X";
+                };
+                y2: y {
+                    linux,code = <BTN_Y>; /* BTN_WEST */
+                    gpios = <&gpio 12 GPIO_ACTIVE_LOW>;
+                    label = "BTN_Y";
+                };
+                tr2: tr {
+                    linux,code = <BTN_TR>;
+                    gpios = <&gpio 16 GPIO_ACTIVE_LOW>;
+                    label = "BTN_TR";
+                };
+                a2: a {
+                    linux,code = <BTN_A>; /* BTN_SOUTH */
+                    gpios = <&gpio 20 GPIO_ACTIVE_LOW>;
+                    label = "BTN_A";
+                };
+                b2: b {
+                    linux,code = <BTN_B>; /* BTN_EAST */
+                    gpios = <&gpio 21 GPIO_ACTIVE_LOW>;
+                    label = "BTN_B";
+                };
+            };
+        };
+    };
+
+    fragment@5 {
+        target = <&gpio>;
+        __dormant__ {
+            hotkey_pin1: hotkey_pin1 {
+                brcm,pins = <2>;
+                brcm,function = <0>;
+                brcm,pull = <2>;
+            };
+        };
+    };
+
+    fragment@6 {
+        target = <&gpio>;
+        __dormant__ {
+            hotkey_pin2: hotkey_pin2 {
+                brcm,pins = <3>;
+                brcm,function = <0>;
+                brcm,pull = <2>;
+            };
+        };
+    };
+
+    fragment@7 {
+        target-path = "/";
+        __dormant__ {
+            gpio-joy1 {
+                compatible = "gpio-keys";
+                status = "okay";
+                pinctrl-names = "default";
+                pinctrl-0 = <&button_pins1>, <&hotkey_pin1>;
+                hk1: hotkey {
+                    linux,code = <BTN_MODE>;
+                    gpios = <&gpio 2 GPIO_ACTIVE_LOW>;
+                    label = "BTN_MODE";
+                };
+            };
+        };
+    };
+
+    fragment@8 {
+        target-path = "/";
+        __dormant__ {
+            gpio-joy2 {
+                compatible = "gpio-keys";
+                status = "okay";
+                pinctrl-names = "default";
+                pinctrl-0 = <&button_pins2>, <&hotkey_pin2>;
+                hk2: hotkey {
+                    linux,code = <BTN_MODE>;
+                    gpios = <&gpio 3 GPIO_ACTIVE_LOW>;
+                    label = "BTN_MODE";
+                };
+            };
+        };
+    };
+
+
+    __overrides__ {
+        /* odd fragments for joystick 1 */
+        joy1        = <0>, "+1+3";
+        joy1-hotkey = <0>, "+5+7";
+
+        /* even fragments for joystick 2 */
+        joy2        = <0>, "+2+4";
+        joy2-hotkey = <0>, "+6+8";
+
+        /* per dtparam overwriteable */
+        /* joy1 */
+        up1     = <&button_pins1>, "brcm,pins:0",
+                  <&up1>, "gpios:4";
+        down1   = <&button_pins1>, "brcm,pins:4",
+                  <&down1>, "gpios:4";
+        left1   = <&button_pins1>, "brcm,pins:8",
+                  <&left1>, "gpios:4";
+        right1  = <&button_pins1>, "brcm,pins:12",
+                  <&right1>, "gpios:4";
+        start1  = <&button_pins1>, "brcm,pins:16",
+                  <&start1>, "gpios:4";
+        select1 = <&button_pins1>, "brcm,pins:20",
+                  <&select1>, "gpios:4";
+        tl1     = <&button_pins1>, "brcm,pins:24",
+                  <&tl1>, "gpios:4";
+        x1      = <&button_pins1>, "brcm,pins:28",
+                  <&x1>, "gpios:4";
+        y1      = <&button_pins1>, "brcm,pins:32",
+                  <&y1>, "gpios:4";
+        tr1     = <&button_pins1>, "brcm,pins:36",
+                  <&tr1>, "gpios:4";
+        a1      = <&button_pins1>, "brcm,pins:40",
+                  <&a1>, "gpios:4";
+        b1      = <&button_pins1>, "brcm,pins:44",
+                  <&b1>, "gpios:4";
+        hk1     = <&hotkey_pin1>, "brcm,pins:0",
+                  <&hk1>,"gpios:4";
+        /* joy2 */
+        up2     = <&button_pins2>, "brcm,pins:0",
+                  <&up2>, "gpios:4";
+        down2   = <&button_pins2>, "brcm,pins:4",
+                  <&down2>, "gpios:4";
+        left2   = <&button_pins2>, "brcm,pins:8",
+                  <&left2>, "gpios:4";
+        right2  = <&button_pins2>, "brcm,pins:12",
+                  <&right2>, "gpios:4";
+        start2  = <&button_pins2>, "brcm,pins:16",
+                  <&start2>, "gpios:4";
+        select2 = <&button_pins2>, "brcm,pins:20",
+                  <&select2>, "gpios:4";
+        tl2     = <&button_pins2>, "brcm,pins:24",
+                  <&tl2>, "gpios:4";
+        x2      = <&button_pins2>, "brcm,pins:28",
+                  <&x2>, "gpios:4";
+        y2      = <&button_pins2>, "brcm,pins:32",
+                  <&y2>, "gpios:4";
+        tr2     = <&button_pins2>, "brcm,pins:36",
+                  <&tr2>, "gpios:4";
+        a2      = <&button_pins2>, "brcm,pins:40",
+                  <&a2>, "gpios:4";
+        b2      = <&button_pins2>, "brcm,pins:44",
+                  <&b2>, "gpios:4";
+        hk2     = <&hotkey_pin2>, "brcm,pins:0",
+                  <&hk2>, "gpios:4";
+    };
+};
