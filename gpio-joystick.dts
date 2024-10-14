@@ -50,24 +50,32 @@
                 pinctrl-0 = <&button_pins1>;
                 /* cf. https://github.com/torvalds/linux/blob/master/include/uapi/linux/input-event-codes.h */
                 up1: up {
-                    linux,code = <BTN_DPAD_UP>;
+                    linux,code = <ABS_Y>;
+                    linux,input-type = <EV_ABS>;
+                    linux,input-value = <0xffffffff>; /* -1 */
                     gpios = <&gpio 4 GPIO_ACTIVE_LOW>;
-                    label = "BTN_DPAD_UP";
+                    label = "AXIS_UP";
                 };
                 down1: down {
-                    linux,code = <BTN_DPAD_DOWN>;
+                    linux,code = <ABS_Y>;
+                    linux,input-type = <EV_ABS>;
+                    linux,input-value = <0x1>;
                     gpios = <&gpio 17 GPIO_ACTIVE_LOW>;
-                    label = "BTN_DPAD_DOWN";
+                    label = "AXIS_DOWN";
                 };
                 left1: left {
-                    linux,code = <BTN_DPAD_LEFT>;
+                    linux,code = <ABS_X>;
+                    linux,input-type = <EV_ABS>;
+                    linux,input-value = <0xffffffff>;
                     gpios = <&gpio 27 GPIO_ACTIVE_LOW>;
-                    label = "BTN_DPAD_LEFT";
+                    label = "AXIS_LEFT";
                 };
                 right1: right {
-                    linux,code = <BTN_DPAD_RIGHT>;
+                    linux,code = <ABS_X>;
+                    linux,input-type = <EV_ABS>;
+                    linux,input-value = <0x1>;
                     gpios = <&gpio 22 GPIO_ACTIVE_LOW>;
-                    label = "BTN_DPAD_RIGHT";
+                    label = "AXIS_RIGHT";
                 };
                 start1: start {
                     linux,code = <BTN_START>;
