@@ -44,7 +44,7 @@
         __dormant__ {
             gpio-joy1 {
                 compatible = "gpio-keys";
-                label = "GPIO Arcade Joystick 1";
+                label = "GPIO Arcade Gamepad 1";
                 status = "okay";
                 pinctrl-names = "default";
                 pinctrl-0 = <&button_pins1>;
