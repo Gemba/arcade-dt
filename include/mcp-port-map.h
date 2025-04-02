@@ -1,6 +1,8 @@
 /*
  * defines gpio port number to event code for I2C/MCP23017 connected joysticks
  *
+ * This file is part of Arcade-DT.
+ *
  * Copyright (c) 2024 Gemba @ GitHub
  * SPDX-License-Identifier: GPL-2.0-only
  */
@@ -8,9 +10,9 @@
 #define _ARCADE_DT_MCP_PORT_MAP_
 
 /*
- * see: dt-bindings/input/linux-event-codes.h for button defines
+ * see kernel source dt-bindings/input/linux-event-codes.h for button defines
  * a == south, b == east, x == north, y == west
- * port 15 is spare
+ * port 15 (16th button) is spare, feel free to define below
  */
 #define ARCADE_DT_MCP_PORT_MAP \
                 up     { linux,code = <BTN_DPAD_UP>;    gpios = <&mcp23017 0 GPIO_ACTIVE_LOW>;  label = "BTN_DPAD_UP"; };\

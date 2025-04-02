@@ -9,8 +9,8 @@ Arcade DT: Portable Game Controller- / Joystick-Driver in 100% Device Tree Sourc
 <p align="center" style="">
 For (Retro-)Gamers on the Raspberry Pi:<br>
 Precise game control due to close to zero input lag<br>
-No C-code and building, only essential driver configuration<br>
-Always up-to-date with the Kernel<br>
+No C-code, only essential driver configuration<br>
+No custom Kernel module to install, thus always up-to-date with the Kernel<br>
 Utilizes on-board GPIO: No indirection via USB needed<br>
 Ready for SBC other than the Raspberry Pi
 </p>
@@ -74,6 +74,19 @@ Run `sudo make install`. If you don't get any error messages you will have two n
 Don't reboot yet, as they have to be configured and enabled (see next section).
 
 **Important**: If you have previously been using the `mk_arcade_joystick_rpi` or `db9_gpio_rpi` module (check the `/etc/modprobe.d/*.conf` files if they are loaded), then disable any such kernel module. Also disable any userland GPIO "driver" before rebooting.
+
+### How Does The Build Work?
+
+On a very high level the device tree is roughly comparable with the PC BIOS, i.e. it defines what capabilities and peripherals a computer has. The device tree source definition (`.dts`) is converted to the binary representation (`.dtbo`) by the device tree compiler (`dtc`).
+
+To increase the human-readability of the source files this project uses C-defines from the Kernel header files. They define logical names for the numeric event codes. Thus the preprocessor of the compiler `cpp` is [first run](https://github.com/Gemba/arcade-dt/blob/9e1193a5cc8da0b34f6b73c3287408a91d1840dd/Makefile#L62) to replace these logical names with the numeric values, before the output is then converted by `dtc` to the device tree binary object.
+
+This is for both usage scenarios (with GPIO direct and via MCP23017) identical. However, the MCP23017 building part has a few more steps:
+
+1. As each MCP device tree configuration is identical in this project, there is a one large preprocessor directive in `include/mcp-port-map.h` defined. This avoids a lot of copy-waste when attaching more than one MCP23017.
+2. The directive is used and replaced in `gpio-mcp-joystick-tpl.dts` (up to eight times) and ends up in the device tree source file `gpio-mcp-joystick-stub.dts` which then is cleaned from everything that would choke the `dtc`. See these [lines](https://github.com/Gemba/arcade-dt/blob/9e1193a5cc8da0b34f6b73c3287408a91d1840dd/Makefile#L55-L57).
+3. The MCP device tree stub file `gpio-mcp-joystick-stub.dts` is incomplete and [is merged](https://github.com/Gemba/arcade-dt/blob/9e1193a5cc8da0b34f6b73c3287408a91d1840dd/Makefile#L58) with the required device tree specification `mcp23017-overlay.dts` [from the running Kernel](https://github.com/Gemba/arcade-dt/blob/9e1193a5cc8da0b34f6b73c3287408a91d1840dd/Makefile#L54). The RaspberryPi foundation provides the tool [ovmerge](https://github.com/raspberrypi/utils/tree/master/ovmerge) for this. Note in the merged output `gpio-mcp-joystick.dts` how the `fragments@<n>` are renumbered and the `__overrides__` section includes the part from the stub.
+4. The merged output `gpio-mcp-joystick.dts` is then compiled by the `dtc` as usual.
 
 ## Configuration
 
@@ -360,6 +373,15 @@ Grab your favorite beverage and revel in your success!
 
 ## How Do I ...?
 
+### Flip the Joystick Order in RetroArch
+
+If you notice for example that the player 1 and player 2 joystick are swapped with Arcade-DT. You can change the order with the option `input_player1_joypad_index`, `input_player2_joypad_index` and so on. At RetroPie installations the global RetroArch `retroarch.cfg` file is located at `/opt/retropie/configs/all`. Add these lines to swap the joystick order (note that the `input_player...` keyword starts at 1 and the index value starts at 0):
+
+```ini
+input_player1_joypad_index = 1
+input_player2_joypad_index = 0
+```
+
 ### Change the Displayed Event Device Name
 
 Review the `label = ...` entries in `gpio-joystick.dts` in the `gpio-joy1`, `gpio-joy2` nodes and the labels in the `gpio-mcp-joystick-tpl.dts` in the `gpio-mcp-joy1`, `gpio-mcp-joy2`, ... nodes. Rebuild and re-install the DTBO files.
@@ -383,6 +405,7 @@ MCP: You can change `EV_KEY` event codes for the device tree object `gpio-mcp-jo
 
 ## References
 
+- Devicetree in [Wikipedia](https://en.wikipedia.org/wiki/Devicetree)
 - Primer on Device Tree and a little history: [Device Tree for Dummies](https://bootlin.com/pub/conferences/2014/elc/petazzoni-device-tree-dummies/petazzoni-device-tree-dummies.pdf) (2013)
 - [Raspberry Pi Devicetree Documentation](https://github.com/raspberrypi/documentation/blob/develop/documentation/asciidoc/computers/configuration/device-tree.adoc)
 - [Pinout.xyz](https://pinout.xyz)

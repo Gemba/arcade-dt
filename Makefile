@@ -1,16 +1,17 @@
-# Makefile to compile and install devicetree binary overlays.
+# Makefile to compile and install device tree binary overlays.
 #
-# Note: make to be run in the folder of this Makefile
+# Note: make needs to be run in the folder of this Makefile, see also
+# accompanied README.md
 #
 # Source files:
 # - gpio-joystick.dts: preprocessed once to replace defines
 #
 # - gpio-mcp-joystick-tpl.dts: preprocessed once to replace local defines and
 #   the ones from evdev (creates gpio-mcp-joystick-stub.dts), then merged with
-#   existing mcp23017-overlay.dts from upstream. The merge creates
+#   existing mcp23017-overlay.dts from upstream. The merge creates then
 #   gpio-mcp-joystick.dts.
 #
-# The gpio-joystick.dts and gpio-mcp-joystick.dts are then compiled to device
+# The gpio-joystick.dts and gpio-mcp-joystick.dts are finally compiled to device
 # tree binaries (*.dtbo).
 #
 # Copyright (c) 2024 Gemba @ GitHub
