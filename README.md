@@ -149,7 +149,7 @@ dtoverlay=gpio-joystick,joy1,joy1-hotkey,joy2,joy2-hotkey
 
 The default mapping for GPIO ports/hardware pins to evdev key events is shown below:
 
-![GPIO to evdev key mapping](doc/img/gpio40_evdev_mapping.png)
+![GPIO to evdev key mapping](doc/img/Arcade-DT-GPIO-EvInput-Mapping.svg)
 
 ### Joysticks Wired via MCP23017
 
