@@ -1,5 +1,5 @@
 *.dtbo
+*.dtsi
 gpio-mcp-joystick-stub.dts
 gpio-mcp-joystick.dts
 mcp23017-overlay.dts
-ovmerge

@@ -49,21 +49,37 @@ Arcade DT is highly customizable and should be easily portable to other single b
 
 One time setup:
 
-1. Clone this repository to your Raspberry Pi: `git clone --depth 1 https://github.com/Gemba/arcade-dt`
+1. Clone this repository to your Raspberry Pi: `git clone --depth 1
+   https://github.com/Gemba/arcade-dt`
 1. Navigate into the repository: `cd arcade-dt`
-1. Install `ovmerge`: `wget https://raw.githubusercontent.com/raspberrypi/utils/refs/heads/master/ovmerge/ovmerge && chmod a+x ovmerge`
-1. Install/check if you have these buildtools: `sudo apt install cpp device-tree-compiler make`
-1. Install the kernel headers matching your kernel: You have two options.
-   - Either use the prepared [debian packages](https://www.raspberrypi.com/documentation/computers/linux_kernel.html#kernel-headers). If you are unsure which package to install run `uname -r` and check the suffix (e.g., `-rpi-v7l`) after the kernel version numbers. One of these commands should fit:
-     ```bash
-     sudo apt install linux-headers-rpi-v8
-     sudo apt install linux-headers-rpi-v7l
-     sudo apt install linux-headers-rpi-v7
-     sudo apt install linux-headers-rpi-v6
-     ```
-   - If _none_ of these packages is available you can run `sudo apt install linux-headers-rpi` as fallback.
-   - Afterwards you should have some folder named `linux-headers-*-common*` below `/usr/src`. Don't worry: The foldername does not have to be the same as the minor and micro kernel version you are running. It's purpose is only to provide the defines for the evdev event codes e.g., `#define BTN_DPAD_UP 0x220`. These are used in the device tree sources of this project.
-1. Package which is handy for testing: `sudo apt install gpiod`. Package `evtest` should be present already.
+1. Run the bootstrap with `bash bootstrap.sh` from this repo, or execute
+   manually these steps below:
+    1. Run `git submodule init ; git submodule update` to get the `ovmerge` tool
+       from RaspberryPi utils repo.
+    1. Install/check if you have these buildtools: `sudo apt install cpp
+       device-tree-compiler make`
+    1. Install the kernel headers matching your kernel: You have two options.
+        - Either use the prepared [debian
+          packages](https://www.raspberrypi.com/documentation/computers/linux_kernel.html#kernel-headers).
+          If you are unsure which package to install run `uname -r` and check
+          the suffix (e.g., `-rpi-v7l`) after the kernel version numbers. One of
+          these commands should fit:
+          ```bash
+          sudo apt install linux-headers-rpi-v8
+          sudo apt install linux-headers-rpi-v7l
+          sudo apt install linux-headers-rpi-v7
+          sudo apt install linux-headers-rpi-v6
+          ```
+        - If _none_ of these packages is available you can run `sudo apt install
+          linux-headers-rpi` as fallback.
+        - Afterwards you should have some folder named `linux-headers-*-common*`
+          below `/usr/src`. Don't worry: The foldername does not have to be the
+          same as the minor and micro kernel version you are running. It's
+          purpose is only to provide the defines for the evdev event codes e.g.,
+          `#define BTN_DPAD_UP 0x220`. These are used in the device tree sources
+          of this project.
+    1. Package which is handy for testing: `sudo apt install gpiod`. Package
+       `evtest` should be present already.
 
 **For use with Amiberry**: Please apply the provided patch to Amiberry. See [here](patch_amiberry/README.md).
 
@@ -71,7 +87,7 @@ One time setup:
 
 Run `sudo make install`. If you don't get any error messages you will have two new device tree overlays in `/boot/overlays`: `gpio-joystick.dtbo` for joysticks directly connected to the GPIO and `gpio-mcp-joystick.dtbo` for joysticks connected via an MCP23017 port expander.
 
-Don't reboot yet, as they have to be configured and enabled (see next section).
+Don't reboot yet, as they have to be configured and enabled (see section _Configuration_).
 
 **Important**: If you have previously been using the `mk_arcade_joystick_rpi` or `db9_gpio_rpi` module (check the `/etc/modprobe.d/*.conf` files if they are loaded), then disable any such kernel module. Also disable any userland GPIO "driver" before rebooting.
 
@@ -97,6 +113,8 @@ Make the following edits in `/boot/config.txt` or `/boot/firmware/config.txt`. T
 The overlay has the name `gpio-joystick` and should be used only once. It allows the parameters `joy1`, `joy2`, `joy1-hotkey`, `joy2-hotkey`, at least `joy1` or `joy2` must be provided. If you addtionally provide `hotkey<n>` you will get 13 buttons instead of 12 buttons for the respective joystick.
 
 **Note**: You can not share the hotkey button/pin between the two controllers. Each controller has to use its dedicated hotkey pin.
+
+**Note**: If you have wired the device(s) like in the figure below, you should not be needing to edit the `gpio-joystick.dts`. Else refer to the section _Change GPIO Ports and/or Event Codes_ in the _How Do I..._ section.
 
 If the hardware pin to GPIO port does not fit your Arcade setup you can overwrite the gpio port number by providing a key function handle with a different GPIO port, the options use the pattern `<function><joy-number>=<GPIO-number>` e.g., providing `start1=23` will use GPIO23 instead of the default GPIO10 for joystick 1. Make sure you pick a GPIO pin which is defined in `brcm,pins` and also make sure to only use each GPIO number once. Thus in the example given you will have to change the the button formerly assigned to GPIO23 to a spare GPIO. If you also supply `tr1=10` then the GPIO ports are swapped between _Start_ and _Right Trigger_ (see also example below).
 
@@ -392,7 +410,7 @@ Edit `gpio-mcp-joystick-tpl.dts` and add fragments with the IDs 55 to 58. Copy a
 
 ### Change GPIO Ports and/or Event Codes
 
-GPIO: You can change `EV_KEY` event codes in the `gpio-joystick.dts` in `fragment@3` and `fragment@4` and for the hotkey in `fragment@7` and `fragment@8`. Be careful when changing GPIO assignments in the DTS file: Each GPIO number can only be used once and must be element of the `brcm,pins` set for either joystick 1 or joystick 2. Remember you can also re-assign GPIO ports via dtparams to the `gpio-joystick` device tree object in your `config.txt` (see config section).
+GPIO: You can change `EV_KEY` event codes in the `gpio-joystick.dts` in `fragment@3` and `fragment@4` and for the hotkey in `fragment@7` and `fragment@8`. Be careful when changing GPIO assignments in the DTS file: Each GPIO number can only be used once and must be element of the `brcm,pins` set for either joystick 1 or joystick 2. You should only change the `brcm,pins` and `EV_KEY` if you use the GPIO header also for other devices (e.g., TFT display) to spare the GPIO pins which are not used as joystick input: Remember you can also re-assign GPIO ports via `dtoverlay=` to the `gpio-joystick` device tree object in your `config.txt` (see _Configuration_ section).
 
 MCP: You can change `EV_KEY` event codes for the device tree object `gpio-mcp-joystick` in the [`include/mcp-port-map.h`](include/mcp-port-map.h). You may have different mappings per MCP but to do so you have to copy and rename the `ARCADE_DT_MCP_PORT_MAP` define and use the define in the `gpio-mcp-joystick-tpl.dts`. Rebuild and re-install the DTBO files.
 

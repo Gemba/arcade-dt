@@ -45,6 +45,7 @@ SED_CLEAN := '/^\#.*$$/d' '/^$$/d'
 MERGE_BASE := mcp23017-overlay.dts
 MERGE_WITH := gpio-mcp-joystick-stub.dts
 MERGE_DEST := gpio-mcp-joystick.dts
+OVERLAY_DL_URL := https://raw.githubusercontent.com/raspberrypi/linux/refs/heads/rpi-$(KVERSION_MAJOR_MINOR).y/arch/arm/boot/dts/overlays
 
 all: merge $(DTBOS)
 
@@ -52,10 +53,16 @@ merge:
 	@echo "[*] Merging ..."
 	@echo "[*] Kernel version detected: $(KVERSION_MAJOR_MINOR)"
 	@echo "[*] Include folders: $(INCLUDES:%=\n    %/include)\n"
-	wget -q -O $(MERGE_BASE) https://raw.githubusercontent.com/raspberrypi/linux/refs/heads/rpi-$(KVERSION_MAJOR_MINOR).y/arch/arm/boot/dts/overlays/mcp23017-overlay.dts
+
+	wget -q -O $(MERGE_BASE) $(OVERLAY_DL_URL)/mcp23017-overlay.dts
+ifeq ($(shell test $(KVERSION_MAJOR) -ge 6; echo $$?),0)
+	wget -q -O i2c-buses.dtsi $(OVERLAY_DL_URL)/i2c-buses.dtsi
+endif
+
 	$(CXX) $(INCLUDES:%=-I%/include) $(CFLAGS) gpio-mcp-joystick-tpl.dts \
 		| sed $(SED_CLEAN:%=-e %) -e 's/}; /};\n                /g' \
 		> $(MERGE_WITH)
+
 	perl $(OVMERGE) -S 4 $(MERGE_BASE) $(MERGE_WITH) > $(MERGE_DEST)
 
 $(DTBOS): %.dtbo: %.dts
@@ -63,7 +70,7 @@ $(DTBOS): %.dtbo: %.dts
 	$(CXX) $(INCLUDES:%=-I%/include) $(CFLAGS) $^ | dtc $(DTC_FLAGS) -o $@
 
 clean:
-	rm -f $(DTBOS) $(MERGE_BASE) $(MERGE_WITH) $(MERGE_DEST)
+	rm -f $(DTBOS) $(MERGE_BASE) $(MERGE_WITH) $(MERGE_DEST) *.dtsi
 
 install: all
 	@echo "[*] Installing ..."
