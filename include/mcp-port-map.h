@@ -10,9 +10,9 @@
 #define _ARCADE_DT_MCP_PORT_MAP_
 
 /*
- * see kernel source dt-bindings/input/linux-event-codes.h for button defines
- * a == south, b == east, x == north, y == west
- * port 15 (16th button) is spare, feel free to define below
+ * See kernel source dt-bindings/input/linux-event-codes.h for button defines.
+ * BTN_A == south, BTN_B == east, BTN_X == north, BTN_Y == west.
+ * Defines ports 0 to 14. Port 15 (16th button) is spare, feel free to define below.
  */
 #define ARCADE_DT_MCP_PORT_MAP \
                 up     { linux,code = <BTN_DPAD_UP>;    gpios = <&mcp23017 0 GPIO_ACTIVE_LOW>;  label = "BTN_DPAD_UP"; };\
