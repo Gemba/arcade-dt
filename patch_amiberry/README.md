@@ -1,8 +1,8 @@
-# Patch for any Amiberry from v5.7.1 Onwards
+# Patch for any Amiberry
 
-To be able to fully use Arcade DT with amiberry you have to apply this patch, as
-long as [this issue](https://github.com/BlitterStudio/amiberry/issues/1493) is
-not merged into the amiberry mainline and/or backported to amiberry-lite main.
+You only have to apply these patches if you are using:
+- Version 5.9.2 or earlier of Amiberry-lite
+- Version 7.1.1 or earlier of Amiberry
 
 ## Steps for RetroPie Amiberry Builds
 

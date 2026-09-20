@@ -81,7 +81,9 @@ One time setup:
     1. Package which is handy for testing: `sudo apt install gpiod`. Package
        `evtest` should be present already.
 
-**For use with Amiberry**: Please apply the provided patch to Amiberry. See [here](patch_amiberry/README.md).
+**For use with Amiberry**:
+- If you run Amiberry lite _less or equal_ to v5.9.2 (March 2026) or Amiberry _less or equal_ to v7.1.1 (Sep 2025) apply the provided patch to Amiberry. See [here](patch_amiberry/README.md).
+- If you run Amiberry / Amiberry lite without RetroPie, then you might add this [gamecontroller info](gamecontrollerdb_user.txt) for SDL to the file `gamecontrollerdb_user.txt`. This file is usually located at `~/.local/share/amiberry[-lite]/controllers` sibling to `gamecontrollerdb.txt`. This will announce the Joystick as _GPIO Arcade Gamepad 1_ to SDL. You can create additional mappings for example with the [SDL2 Gamepad Tool](https://github.com/General-Arcade/sdl2-gamepad-tool) (requires GUI) or SDL2 ([controllermap](https://github.com/libsdl-org/SDL/blob/SDL2/test/controllermap.c)) /SDL3 ([testcontroller](https://github.com/libsdl-org/SDL/blob/main/test/testcontroller.c)) command line tools.
 
 ### Build and Install the Device Tree Drivers
 
