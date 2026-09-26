@@ -83,7 +83,32 @@ One time setup:
 
 **For use with Amiberry**:
 - If you run Amiberry lite _less or equal_ to v5.9.2 (March 2026) or Amiberry _less or equal_ to v7.1.1 (Sep 2025) apply the provided patch to Amiberry. See [here](patch_amiberry/README.md).
-- If you run Amiberry / Amiberry lite without RetroPie, then you might add this [gamecontroller info](gamecontrollerdb_user.txt) for SDL to the file `gamecontrollerdb_user.txt`. This file is usually located at `~/.local/share/amiberry[-lite]/controllers` sibling to `gamecontrollerdb.txt`. This will announce the Joystick as _GPIO Arcade Gamepad 1_ to SDL. You can create additional mappings for example with the [SDL2 Gamepad Tool](https://github.com/General-Arcade/sdl2-gamepad-tool) (requires GUI) or SDL2 ([controllermap](https://github.com/libsdl-org/SDL/blob/SDL2/test/controllermap.c)) /SDL3 ([testcontroller](https://github.com/libsdl-org/SDL/blob/main/test/testcontroller.c)) command line tools.
+- If you run Amiberry / Amiberry lite without RetroPie, then you might add this [gamecontroller info](gamecontrollerdb_user.txt) for SDL to the file `gamecontrollerdb_user.txt`. This file is usually located at `~/.local/share/amiberry[-lite]/controllers` sibling to `gamecontrollerdb.txt`. This will announce the Joystick as _GPIO Arcade Joystick 1_ with 13 buttons (4 dpad, 8 buttons plus hotkey/mode) to SDL alongside with the button mapping. See also next section.
+
+**SDL Usage / Game Controller DB Notes**:
+
+- If you run your game without GUI, directly via framebuffer (KMS/DRM), chances are you have to hint SDL about the connected Arcade DT controllers.
+- SDL uses its own set of the gamecontroller DB based on the community effort. The default SDL controller configs for the devices of Arcade DT may take some time to show up in there as they are updated from time to time from [gamecontroller DB](https://github.com/mdqinc/SDL_GameControllerDB).
+- You can create additional mappings for example with the [SDL2 Gamepad Tool](https://github.com/General-Arcade/sdl2-gamepad-tool) (requires GUI) or the lightweight but excellent tool [sdl-jstest](https://github.com/Grumbel/sdl-jstest) on the commandline. For the latter consider to [disable the build for some SDL major versions](https://github.com/Grumbel/sdl-jstest/tree/master#compilation) you do not use. For example, if you only use SDL2, then apply: `cmake -DBUILD_SDL_JSTEST=0 -DBUILD_SDL3_JSTEST=0 ..`
+- If you adjust in Arcade DT the Joystick name, you will have to create and register the new SDL mappings for your emulator or game, you may want to use the environment variable [`SDL_HINT_GAMECONTROLLERCONFIG_FILE`](https://wiki.libsdl.org/SDL3/SDL_HINT_GAMECONTROLLERCONFIG_FILE) of SDL. 
+- The tool `sdl-jstest` will print out the configuration string when you use the option `sdl-jstest --list`, thus you can copy-paste that string.
+- The button assignments in the SDL configuration string itself (see last column in table below or int the [gamecontroller info](gamecontrollerdb_user.txt)) are sorted by default by their Linux event code (lower to higher) and the button number, which is counted up from b0.
+
+| Linux Event Code | Linux Event Name | SDL Name:Button Idx |
+| :--------------: | :--------------: | :-----------------: |
+|       304        |    BTN_SOUTH     |        a:b0         |
+|       305        |     BTN_EAST     |        b:b1         |
+|       307        |    BTN_NORTH     |        x:b2         |
+|       308        |     BTN_WEST     |        y:b3         |
+|       310        |      BTN_TL      |   leftshoulder:b4   |
+|       311        |      BTN_TR      |  rightshoulder:b5   |
+|       314        |    BTN_SELECT    |       back:b6       |
+|       315        |    BTN_START     |      start:b7       |
+|       316        |     BTN_MODE     |      guide:b8       |
+|       544        |   BTN_DPAD_UP    |       dpup:b9       |
+|       545        |  BTN_DPAD_DOWN   |     dpdown:b10      |
+|       546        |  BTN_DPAD_LEFT   |     dpleft:b11      |
+|       547        |  BTN_DPAD_RIGHT  |     dpright:b12     |
 
 ### Build and Install the Device Tree Drivers
 
