@@ -32,7 +32,7 @@
         __dormant__ {
             gpio-mcp-joy1 {
                 compatible = "gpio-keys";
-                label = "I2C Arcade Joystick 1";
+                label = "Arcade DT (I2C) Joystick 1";
                 status = "okay";
                 pinctrl-0 = <&pin_cfg>;
                 pinctrl-names = "default";
@@ -47,7 +47,7 @@
         __dormant__ {
             gpio-mcp-joy2 {
                 compatible = "gpio-keys";
-                label = "I2C Arcade Joystick 2";
+                label = "Arcade DT (I2C) Joystick 2";
                 status = "okay";
                 pinctrl-0 = <&pin_cfg>;
                 pinctrl-names = "default";
@@ -62,7 +62,7 @@
         __dormant__ {
             gpio-mcp-joy3 {
                 compatible = "gpio-keys";
-                label = "I2C Arcade Joystick 3";
+                label = "Arcade DT (I2C) Joystick 3";
                 status = "okay";
                 pinctrl-0 = <&pin_cfg>;
                 pinctrl-names = "default";
@@ -77,7 +77,7 @@
         __dormant__ {
             gpio-mcp-joy4 {
                 compatible = "gpio-keys";
-                label = "I2C Arcade Joystick 4";
+                label = "Arcade DT (I2C) Joystick 4";
                 status = "okay";
                 pinctrl-0 = <&pin_cfg>;
                 pinctrl-names = "default";

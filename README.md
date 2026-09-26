@@ -83,7 +83,7 @@ One time setup:
 
 **For use with Amiberry**:
 - If you run Amiberry lite _less or equal_ to v5.9.2 (March 2026) or Amiberry _less or equal_ to v7.1.1 (Sep 2025) apply the provided patch to Amiberry. See [here](patch_amiberry/README.md).
-- If you run Amiberry / Amiberry lite without RetroPie, then you might add this [gamecontroller info](gamecontrollerdb_user.txt) for SDL to the file `gamecontrollerdb_user.txt`. This file is usually located at `~/.local/share/amiberry[-lite]/controllers` sibling to `gamecontrollerdb.txt`. This will announce the Joystick as _GPIO Arcade Joystick 1_ with 13 buttons (4 dpad, 8 buttons plus hotkey/mode) to SDL alongside with the button mapping. See also next section.
+- If you run Amiberry / Amiberry lite without RetroPie, then you might add this [gamecontroller info](gamecontrollerdb_user.txt) for SDL to the file `gamecontrollerdb_user.txt`. This file is usually located at `~/.local/share/amiberry[-lite]/controllers` sibling to `gamecontrollerdb.txt`. This will announce the Joystick as _Arcade DT Joystick 1_ and _2_ with 13 buttons (4 dpad, 8 buttons plus hotkey/mode) and _Arcade DT (I2C) Joystick 1_ (_2_,_3_ and _4_) to SDL alongside with the button mapping. See also next section.
 
 **SDL Usage / Game Controller DB Notes**:
 

@@ -1,0 +1,6 @@
+1900ecac010000000100000000010000,Arcade DT Joystick 1,a:b0,b:b1,x:b2,y:b3,back:b6,guide:b8,start:b7,leftshoulder:b4,rightshoulder:b5,dpup:b9,dpdown:b10,dpleft:b11,dpright:b12,crc:acec,platform:Linux,
+1900acad010000000100000000010000,Arcade DT Joystick 2,a:b0,b:b1,x:b2,y:b3,back:b6,guide:b8,start:b7,leftshoulder:b4,rightshoulder:b5,dpup:b9,dpdown:b10,dpleft:b11,dpright:b12,crc:adac,platform:Linux,
+190070f4010000000100000000010000,Arcade DT (I2C) Joystick 1,a:b0,b:b1,x:b2,y:b3,back:b8,guide:b10,start:b9,leftshoulder:b4,rightshoulder:b5,lefttrigger:b6,righttrigger:b7,dpup:b11,dpdown:b12,dpleft:b13,dpright:b14,crc:f470,platform:Linux,
+190030f5010000000100000000010000,Arcade DT (I2C) Joystick 2,a:b0,b:b1,x:b2,y:b3,back:b8,guide:b10,start:b9,leftshoulder:b4,rightshoulder:b5,lefttrigger:b6,righttrigger:b7,dpup:b11,dpdown:b12,dpleft:b13,dpright:b14,crc:f530,platform:Linux,
+1900f135010000000100000000010000,Arcade DT (I2C) Joystick 3,a:b0,b:b1,x:b2,y:b3,back:b8,guide:b10,start:b9,leftshoulder:b4,rightshoulder:b5,lefttrigger:b6,righttrigger:b7,dpup:b11,dpdown:b12,dpleft:b13,dpright:b14,crc:35f1,platform:Linux,
+1900b0f7010000000100000000010000,Arcade DT (I2C) Joystick 4,a:b0,b:b1,x:b2,y:b3,back:b8,guide:b10,start:b9,leftshoulder:b4,rightshoulder:b5,lefttrigger:b6,righttrigger:b7,dpup:b11,dpdown:b12,dpleft:b13,dpright:b14,crc:f7b0,platform:Linux,
