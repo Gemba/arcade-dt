@@ -36,7 +36,7 @@ INCLUDES += $(shell pwd)
 
 INSTALL_DIR := /boot/overlays
 
-OVMERGE := ./ovmerge
+OVMERGE := utils/ovmerge/ovmerge
 
 DTBOS := gpio-joystick.dtbo gpio-mcp-joystick.dtbo
 
