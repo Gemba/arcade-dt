@@ -87,7 +87,7 @@ One time setup:
 
 **SDL Usage / Game Controller DB Notes**:
 
-- If you run your game without GUI, directly via framebuffer (KMS/DRM), chances are you have to hint SDL about the connected Arcade DT controllers.
+- If you run your game without GUI, directly via framebuffer or KMS/DRM, chances are you have to hint SDL about the connected Arcade DT controllers.
 - SDL uses its own set of the gamecontroller DB based on the community effort. The default SDL controller configs for the devices of Arcade DT may take some time to show up in there as they are updated from time to time from [gamecontroller DB](https://github.com/mdqinc/SDL_GameControllerDB).
 - You can create additional mappings for example with the [SDL2 Gamepad Tool](https://github.com/General-Arcade/sdl2-gamepad-tool) (requires GUI) or the lightweight but excellent tool [sdl-jstest](https://github.com/Grumbel/sdl-jstest) on the commandline. For the latter consider to [disable the build for some SDL major versions](https://github.com/Grumbel/sdl-jstest/tree/master#compilation) you do not use. For example, if you only use SDL2, then apply: `cmake -DBUILD_SDL_JSTEST=0 -DBUILD_SDL3_JSTEST=0 ..`
 - If you adjust in Arcade DT the Joystick name, you will have to create and register the new SDL mappings for your emulator or game, you may want to use the environment variable [`SDL_HINT_GAMECONTROLLERCONFIG_FILE`](https://wiki.libsdl.org/SDL3/SDL_HINT_GAMECONTROLLERCONFIG_FILE) of SDL. 
