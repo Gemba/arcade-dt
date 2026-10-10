@@ -50,38 +50,36 @@ Arcade DT is highly customizable and should be easily portable to other single b
 One time setup:
 
 1. Clone this repository to your Raspberry Pi: `git clone --depth 1
-   https://github.com/Gemba/arcade-dt`
+https://github.com/Gemba/arcade-dt`
 1. Navigate into the repository: `cd arcade-dt`
 1. Run the bootstrap with `bash bootstrap.sh` from this repo, or execute
    manually these steps below:
-    1. Run `git submodule init ; git submodule update` to get the `ovmerge` tool
-       from RaspberryPi utils repo.
-    1. Install/check if you have these buildtools: `sudo apt install cpp
-       device-tree-compiler make`
-    1. Install the kernel headers matching your kernel: You have two options.
-        - Either use the prepared [debian
-          packages](https://www.raspberrypi.com/documentation/computers/linux_kernel.html#kernel-headers).
-          If you are unsure which package to install run `uname -r` and check
-          the suffix (e.g., `-rpi-v7l`) after the kernel version numbers. One of
-          these commands should fit:
-          ```bash
-          sudo apt install linux-headers-rpi-v8
-          sudo apt install linux-headers-rpi-v7l
-          sudo apt install linux-headers-rpi-v7
-          sudo apt install linux-headers-rpi-v6
-          ```
-        - If _none_ of these packages is available you can run `sudo apt install
-          linux-headers-rpi` as fallback.
-        - Afterwards you should have some folder named `linux-headers-*-common*`
-          below `/usr/src`. Don't worry: The foldername does not have to be the
-          same as the minor and micro kernel version you are running. It's
-          purpose is only to provide the defines for the evdev event codes e.g.,
-          `#define BTN_DPAD_UP 0x220`. These are used in the device tree sources
-          of this project.
-    1. Package which is handy for testing: `sudo apt install gpiod`. Package
-       `evtest` should be present already.
+   1. Run `git submodule init ; git submodule update` to get the `ovmerge` tool
+      from RaspberryPi utils repo.
+   1. Install/check if you have these buildtools: `sudo apt install cpp
+device-tree-compiler make`
+   1. Install the kernel headers matching your kernel: You have two options. - Either use the prepared [debian
+      packages](https://www.raspberrypi.com/documentation/computers/linux_kernel.html#kernel-headers).
+      If you are unsure which package to install run `uname -r` and check
+      the suffix (e.g., `-rpi-v7l`) after the kernel version numbers. One of
+      these commands should fit:
+      `bash
+        sudo apt install linux-headers-rpi-v8
+        sudo apt install linux-headers-rpi-v7l
+        sudo apt install linux-headers-rpi-v7
+        sudo apt install linux-headers-rpi-v6
+        ` - If _none_ of these packages is available you can run `sudo apt install
+linux-headers-rpi` as fallback. - Afterwards you should have some folder named `linux-headers-*-common*`
+      below `/usr/src`. Don't worry: The foldername does not have to be the
+      same as the minor and micro kernel version you are running. It's
+      purpose is only to provide the defines for the evdev event codes e.g.,
+      `#define BTN_DPAD_UP 0x220`. These are used in the device tree sources
+      of this project.
+   1. Package which is handy for testing: `sudo apt install gpiod`. Package
+      `evtest` should be present already.
 
 **For use with Amiberry**:
+
 - If you run Amiberry lite _less or equal_ to v5.9.2 (March 2026) or Amiberry _less or equal_ to v7.1.1 (Sep 2025) apply the provided patch to Amiberry. See [here](patch_amiberry/README.md).
 - If you run Amiberry / Amiberry lite without RetroPie, then you might add this [gamecontroller info](gamecontrollerdb_user.txt) for SDL to the file `gamecontrollerdb_user.txt`. This file is usually located at `~/.local/share/amiberry[-lite]/controllers` sibling to `gamecontrollerdb.txt`. This will announce the Joystick as _Arcade DT Joystick 1_ and _2_ with 13 buttons (4 dpad, 8 buttons plus hotkey/mode) and _Arcade DT (I2C) Joystick 1_ (_2_,_3_ and _4_) to SDL alongside with the button mapping. See also next section.
 
@@ -90,7 +88,7 @@ One time setup:
 - If you run your game without GUI, directly via framebuffer (KMS/DRM), chances are you have to hint SDL about the connected Arcade DT controllers.
 - SDL uses its own set of the gamecontroller DB based on the community effort. The default SDL controller configs for the devices of Arcade DT may take some time to show up in there as they are updated from time to time from [gamecontroller DB](https://github.com/mdqinc/SDL_GameControllerDB).
 - You can create additional mappings for example with the [SDL2 Gamepad Tool](https://github.com/General-Arcade/sdl2-gamepad-tool) (requires GUI) or the lightweight but excellent tool [sdl-jstest](https://github.com/Grumbel/sdl-jstest) on the commandline. For the latter consider to [disable the build for some SDL major versions](https://github.com/Grumbel/sdl-jstest/tree/master#compilation) you do not use. For example, if you only use SDL2, then apply: `cmake -DBUILD_SDL_JSTEST=0 -DBUILD_SDL3_JSTEST=0 ..`
-- If you adjust in Arcade DT the Joystick name, you will have to create and register the new SDL mappings for your emulator or game, you may want to use the environment variable [`SDL_HINT_GAMECONTROLLERCONFIG_FILE`](https://wiki.libsdl.org/SDL3/SDL_HINT_GAMECONTROLLERCONFIG_FILE) of SDL. 
+- If you adjust in Arcade DT the Joystick name, you will have to create and register the new SDL mappings for your emulator or game, you may want to use the environment variable [`SDL_HINT_GAMECONTROLLERCONFIG_FILE`](https://wiki.libsdl.org/SDL3/SDL_HINT_GAMECONTROLLERCONFIG_FILE) of SDL.
 - The tool `sdl-jstest` will print out the configuration string when you use the option `sdl-jstest --list`, thus you can copy-paste that string.
 - The button assignments in the SDL configuration string itself (see last column in table below or int the [gamecontroller info](gamecontrollerdb_user.txt)) are sorted by default by their Linux event code (lower to higher) and the button number, which is counted up from b0.
 
@@ -178,6 +176,20 @@ The default mapping for GPIO ports/hardware pins to evdev key events is shown be
 
 ![GPIO to evdev key mapping](doc/img/Arcade-DT-GPIO-EvInput-Mapping.svg)
 
+Deviating GPIO labels to input events:
+
+| Label (see figure) | Input Event (BTN\_...) |
+| :----------------: | :--------------------: |
+|         A          |         SOUTH          |
+|         B          |          EAST          |
+|         X          |         NORTH          |
+|         Y          |          WEST          |
+|         HK         |          MODE          |
+|         UP         |        DPAD_UP         |
+|        DOWN        |       DPAD_DOWN        |
+|        LEFT        |       DPAD_LEFT        |
+|       RIGHT        |       DPAD_RIGHT       |
+
 ### Joysticks Wired via MCP23017
 
 With an MCP23017 you will have 16 assignable buttons, in the default settings 14 are used plus one for hotkey. For an MCP23017 to work have I^2^C enabled in your `config.txt` with `dtparam=i2c`. The following options are recognized for the driver `gpio-mcp-joystick`:
@@ -209,20 +221,20 @@ In summary: Assign each MCP a joystick number, a dedicated address and a spare G
 
 ### GPIO
 
-The GPIO ports are set to be active low, thus connect each button with the respective GPIO port/hardware pin and connect the other button connector to ground at the 40-pin header.
+The GPIO ports are set to be active low, thus connect each button with the respective GPIO port/hardware pin and connect the other button connector to ground at the 40-pin header. See also GPIO header pinout figure above.
 
 ### MCP23017
 
 You will plenty of guides on how to connect an MCP23017 to a Raspberry Pi, so I am not going into all details here. This is a quick recap:
 
-| MCP23017 Label |        Raspberry Pi 40Pin Label        | Note                                                                                                         |
-| :------------: | :------------------------------------: | ------------------------------------------------------------------------------------------------------------ |
-|    A0,A1,A2    |                  N/A                   | Pull high (3.3V) to set address select from 0x20 (0b000) to 0x27 (0b111). A0 is 2^0^, A1 is 2^1^, A2 is 2^2^ |
-|   INTA/INTB    | The GPIO designated with `gpiopin=<n>` | Default is GPIO4 (see also previous section). Use either INTA or INTB as the IRQs are mirrored.              |
-|      VCC       |                  VCC                   | Use 3.3V on the Raspberry Pi (usually hardware pin 1)                                                        |
-|      GND       |                  GND                   | Pick any ground pin on the 40-pin header                                                                     |
-|      SDA       |              SDA (GPIO2)               | I^2^C serial bus                                                                                             |
-|      SDC       |              SDC (GPIO3)               | I^2^C serial bus                                                                                             |
+| MCP23017 Label |        Raspberry Pi 40Pin Label        | Note                                                                                                            |
+| :------------: | :------------------------------------: | --------------------------------------------------------------------------------------------------------------- |
+|    A0,A1,A2    |                  N/A                   | Pull high (3.3V) to set address select from 0x20 (0b000) to 0x27 (0b111). A0 counts 1, A1 counts 2, A2 counts 4 |
+|   INTA/INTB    | The GPIO designated with `gpiopin=<n>` | Default is GPIO4 (see also previous section). Use either INTA or INTB as the IRQs are mirrored.                 |
+|      VCC       |                  VCC                   | Connect to 3.3V on the Raspberry Pi (usually hardware pin 1)                                                    |
+|      GND       |                  GND                   | Pick any ground pin on the 40-pin header                                                                        |
+|      SDA       |              SDA (GPIO2)               | I^2^C serial bus                                                                                                |
+|      SDC       |              SDC (GPIO3)               | I^2^C serial bus                                                                                                |
 
 The buttons on an MCP23017 are also configured to be active low, thus attach one button connector to ground and the other one of the connections GPA0 ... GPA7 or GPB0 ... GPB6. Note that GPB7 (GPIO15 in the driver) is currently not used.
 
@@ -275,11 +287,11 @@ No device specified, trying to scan all of /dev/input/event*
 Not running as root, no devices may be available.
 Available devices:
 /dev/input/event0:  HID 046a:0001
-/dev/input/event1:  GPIO Arcade Joystick 1                       # <-- defined by label = ... in DTS
+/dev/input/event1:  Arcade DT Joystick 1                        # <-- defined by label = ... in gpio-joystick.dts
 Select the device event number [0-1]: 1
 Input driver version is 1.0.1
 Input device ID: bus 0x19 vendor 0x1 product 0x1 version 0x100
-Input device name: "GPIO Arcade Joystick 1"
+Input device name: "Arcade DT Joystick 1"
 Supported events:
   Event type 0 (EV_SYN)
   Event type 1 (EV_KEY)
@@ -350,7 +362,7 @@ gpiochip3 - 16 lines:                                              # I2C Joystic
   line  13:      unnamed    "BTN_TR2"   input   active-low [used]
   line  14:      unnamed   "BTN_MODE"   input   active-low [used]
   line  15:      unnamed       unused   input  active-high          # <-- unused (see notes above)
-gpiochip4 - 16 lines:                                               # # I2C Joystick 2
+gpiochip4 - 16 lines:                                               # I2C Joystick 2
   line   0:      unnamed "BTN_DPAD_UP" input active-low [used]
   line   1:      unnamed "BTN_DPAD_DOWN" input active-low [used]
   line   2:      unnamed "BTN_DPAD_LEFT" input active-low [used]
@@ -375,12 +387,12 @@ No device specified, trying to scan all of /dev/input/event*
 Not running as root, no devices may be available.
 Available devices:
 /dev/input/event0:  HID 046a:0001
-/dev/input/event1:  I2C Arcade Joystick 2
-/dev/input/event2:  I2C Arcade Joystick 1
+/dev/input/event1:  Arcade DT (I2C) Joystick 2
+/dev/input/event2:  Arcade DT (I2C) Joystick 1
 Select the device event number [0-2]: 2
 Input driver version is 1.0.1
 Input device ID: bus 0x19 vendor 0x1 product 0x1 version 0x100
-Input device name: "I2C Arcade Joystick 1"
+Input device name: "Arcade DT (I2C) Joystick 1"
 Supported events:
   Event type 0 (EV_SYN)
   Event type 1 (EV_KEY)
@@ -420,7 +432,7 @@ Grab your favorite beverage and revel in your success!
 
 ### Flip the Joystick Order in RetroArch
 
-If you notice for example that the player 1 and player 2 joystick are swapped with Arcade-DT. You can change the order with the option `input_player1_joypad_index`, `input_player2_joypad_index` and so on. At RetroPie installations the global RetroArch `retroarch.cfg` file is located at `/opt/retropie/configs/all`. Add these lines to swap the joystick order (note that the `input_player...` keyword starts at 1 and the index value starts at 0):
+If you notice for example that the player 1 and player 2 joystick are swapped with Arcade DT. You can change the order with the option `input_player1_joypad_index`, `input_player2_joypad_index` and so on. At RetroPie installations the global RetroArch `retroarch.cfg` file is located at `/opt/retropie/configs/all`. Add these lines to swap the joystick order (note that the `input_player...` keyword starts at 1 and the index value starts at 0):
 
 ```ini
 input_player1_joypad_index = 1
@@ -452,7 +464,7 @@ MCP: You can change `EV_KEY` event codes for the device tree object `gpio-mcp-jo
 
 - Devicetree in [Wikipedia](https://en.wikipedia.org/wiki/Devicetree)
 - Primer on Device Tree and a little history: [Device Tree for Dummies](https://bootlin.com/pub/conferences/2014/elc/petazzoni-device-tree-dummies/petazzoni-device-tree-dummies.pdf) (2013)
-- [Raspberry Pi Devicetree Documentation](https://github.com/raspberrypi/documentation/blob/develop/documentation/asciidoc/computers/configuration/device-tree.adoc)
+- [Schema of gpio-keys bindings](https://github.com/raspberrypi/linux/blob/rpi-6.18.y/Documentation/devicetree/bindings/input/gpio-keys.yaml)
 - [Pinout.xyz](https://pinout.xyz)
-- A scrapped 40-pin IDE cable may be more robust than Du-Pont wires, once your wiring is finalized. Or get the connector as [new part](https://eu.mouser.com/datasheet/2/418/7/ENG_CD_1658623_E1-2015515.pdf).
+- A scrapped 40-pin IDE bus cable may be more robust than Du-Pont wires, once your wiring is finalized. Or get the connector as [new part](https://eu.mouser.com/datasheet/2/418/7/ENG_CD_1658623_E1-2015515.pdf).
 - [Microchip MCP23017 Datasheet](https://ww1.microchip.com/downloads/en/DeviceDoc/20001952C.pdf). For ease-of-use go for those on a breakout-board / with a soldered standard 2.54mm / 0.1inch pin header.
